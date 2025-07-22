@@ -1,5 +1,8 @@
 from cryptobox import *
 
+PUBLIC_KEY_SIZE = 120 # bytes
+SIGNATURE_SIZE = 112 # bytes
+
 class Client():
     def __init__(self, url: bytes, trusted_certs: list[bytes]): 
         self.url = url
