@@ -80,7 +80,7 @@ csr = certificate_signing_request(priv, "example.com")
 cert = generate_certificate(ca_cert, ca_priv, csr)
 
 print(certificate_info(cert))
-assert verify_certificate(cert, [ca_cert])
+assert verify_certificate("example.com", cert, [ca_cert])
 ```
 
 ## License
