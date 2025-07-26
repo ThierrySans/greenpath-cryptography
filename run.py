@@ -1,7 +1,7 @@
 import os
 import sys
 
-from cryptobox import b64decode
+from cryptobox import b64decode, b64encode
 from server import Server
 from client import Client
 
@@ -20,11 +20,35 @@ def run(url, trusted_cert_dir, server_dir):
     server = Server(priv, cert, data)
     client = Client(url, trusted_certs)
     client_hello = client.send_client_hello()
+    if client_hello is None:
+        print("client_hello: None")
+        return
+    else: 
+        print("client_hello: " + b64encode(client_hello))
     server_hello = server.send_server_hello(client_hello)
+    if server_hello is None:
+        print("server_hello: None")
+        return
+    else: 
+        print("server_hello: " + b64encode(server_hello))
     client_ready = client.send_client_ready(server_hello)
+    if client_ready is None:
+        print("client_ready: None")
+        return
+    else: 
+        print("client_ready: " + b64encode(client_ready))
     server_data = server.send_data(client_ready)
+    if server_data is None:
+        print("server_data: None")
+        return
+    else: 
+        print("server_data: " + b64encode(server_data))
     client_data = client.receive_data(server_data)
-    print(client_data)
+    if server_data is None:
+        print("client_data: None")
+        return
+    else: 
+        print("client_data: " + str(client_data))
 
 if __name__ == "__main__":
     import os, sys, getopt

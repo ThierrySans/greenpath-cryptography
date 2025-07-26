@@ -10,6 +10,7 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import padding
 from cryptography import x509
+from cryptography.x509.verification import VerificationError
 
 # encode bytes to base64
 def b64encode(data: bytes) -> str:
@@ -195,8 +196,11 @@ def verify_certificate(org: bytes, cert: bytes, trusted_ca_certs: list[bytes]) -
     store = x509.verification.Store(list(map(lambda c: x509.load_der_x509_certificate(c), trusted_ca_certs)))
     builder = x509.verification.PolicyBuilder().store(store)
     verifier = builder.build_server_verifier(x509.DNSName(org))
-    chain = verifier.verify(cert, [])
-    return len(chain) == 2
+    try:
+        chain = verifier.verify(cert, [])
+        return len(chain) == 2
+    except VerificationError:
+        return False
 
 # show certificate info
 def certificate_info(cert: bytes):
